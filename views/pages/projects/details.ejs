@@ -14,6 +14,8 @@
     <h1>
         <%=data.name%>
     </h1>
+
+    <img src="<%=`/${data.static}`%>" alt="project image">
     <h3>Started by:
         <%=data.User.full_name%>
     </h3>
@@ -23,6 +25,8 @@
     </h3>
     <h5>Description:<br><%=data.description%>
     </h5>
+
+
 
     <%if(session && session.id == data.User.id){%>
         <a href="/projects/edit/<%=data.id%>">edit</a>|<a href="/projects/delete/<%=data.id%>">delete</a>

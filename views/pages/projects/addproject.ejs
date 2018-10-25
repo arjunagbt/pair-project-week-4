@@ -10,11 +10,16 @@
 </head>
 <body>
     <h1>Add a new project</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <label></label>
+        Project Name:
         <input type="text" name="name" placeholder="Your Project Name"><br>
+        Project Description:
         <input type="text" name="description" placeholder="Describe your project!"><br>
+        Amount of Money You Need for The Project:
         <input type="number" name="nominal" placeholder="Money needed"><br>
+        Upload a Picture of your Project:
+        <input type="file" name="projectpic"><br>
         <input type="submit" value="Submit!">
     </form>
 </body>
