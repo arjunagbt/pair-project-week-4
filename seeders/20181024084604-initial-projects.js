@@ -8,7 +8,8 @@ module.exports = {
       nominal_needed: 3000000000,
       owner_id: 1,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      static: 'monkaS.png'
     }, ], {});
   },
 

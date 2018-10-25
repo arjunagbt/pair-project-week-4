@@ -7,6 +7,8 @@ const port = process.env.PORT || 3000;
 app.set('view engine', 'ejs')
 app.use(session({ secret: 'keyboard warrior' }))
 app.use('/', express.urlencoded({ extended: false }))
+app.use(express.static(__dirname + '/uploads'))
+app.use(express.static(__dirname + '/css'))
 app.use('/', routes)
 
 app.listen(port, () => console.log(`Running on port ${port}`))

@@ -40,11 +40,13 @@ class ProjectController {
     }
     static addProjectPost(req, res) {
         if (req.session.user) {
+            //res.send(req.file)
             Model.Project.create({
                 name: req.body.name,
                 description: req.body.description,
                 nominal_needed: req.body.nominal,
-                owner_id: req.session.user.id
+                owner_id: req.session.user.id,
+                static: req.file.originalname
             })
                 .then(data => {
                     res.redirect(`/projects/details/${data.id}`)

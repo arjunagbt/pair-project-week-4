@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     nominal_now: DataTypes.BIGINT,
     nominal_paid: DataTypes.BIGINT,
     owner_id: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    status: DataTypes.INTEGER,
+    static: DataTypes.STRING
   }, {});
   Project.associate = function(models) {
     Project.belongsTo(models.User, { foreignKey: 'owner_id', targetKey: 'id'})
