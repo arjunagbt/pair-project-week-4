@@ -5,20 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>add a new project</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link href="/style.css" rel="stylesheet" type="text/css">
     <script src="main.js"></script>
 </head>
 <body>
     <h1>Add a new project</h1>
+    <a href="/projects">Back</a><br>
     <form method="post" enctype="multipart/form-data">
         <label></label>
-        Project Name:
+        Project Name:<br>
         <input type="text" name="name" placeholder="Your Project Name"><br>
-        Project Description:
+        Project Description:<br>
         <input type="text" name="description" placeholder="Describe your project!"><br>
-        Amount of Money You Need for The Project:
+        Amount of Money You Need for The Project:<br>
         <input type="number" name="nominal" placeholder="Money needed"><br>
-        Upload a Picture of your Project:
+        Upload a Picture of your Project:<br>
         <input type="file" name="projectpic"><br>
         <input type="submit" value="Submit!">
     </form>

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Project Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link href="/style.css" rel="stylesheet" type="text/css">
     <script src="main.js"></script>
 </head>
 
@@ -14,7 +14,6 @@
     <h1>
         <%=data.name%>
     </h1>
-
     <img src="<%=`/${data.static}`%>" alt="project image">
     <h3>Started by:
         <%=data.User.full_name%>
@@ -25,7 +24,7 @@
     </h3>
     <h5>Description:<br><%=data.description%>
     </h5>
-
+    <a href="/projects">Back</a><br>
 
 
     <%if(session && session.id == data.User.id){%>
