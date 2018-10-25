@@ -14,7 +14,8 @@ module.exports = {
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       project_id: {
         allowNull: false,
@@ -22,7 +23,8 @@ module.exports = {
         references: {
           model: 'Projects',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade'
       },
       nominal: {
         allowNull: false,

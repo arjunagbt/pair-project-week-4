@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.bulkInsert('Projects', [{
       name: 'Batu Bara',
       description: 'Tambang batu bara di kalimantan',
-      nominal: 3000000000,
+      nominal_needed: 3000000000,
       owner_id: 1,
       createdAt: new Date(),
       updatedAt: new Date()

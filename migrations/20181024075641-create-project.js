@@ -15,11 +15,15 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      nominal: {
+      nominal_needed: {
         allowNull: false,
         type: Sequelize.BIGINT
       },
-      amount_paid: {
+      nominal_now: {
+        type: Sequelize.BIGINT,
+        defaultValue: 0
+      },
+      nominal_paid: {
         defaultValue: 0,
         type: Sequelize.BIGINT
       },
@@ -29,10 +33,11 @@ module.exports = {
         references: {
           model: "Users",
           key: 'id'
-        }
+        },
+        onDelete: 'set null'
       },
       status: {
-        defaultValue: 0,
+        defaultValue: 1,
         type: Sequelize.INTEGER
       },
       createdAt: {
