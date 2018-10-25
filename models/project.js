@@ -3,9 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const Project = sequelize.define('Project', {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
+    nominal_needed: DataTypes.BIGINT,
+    nominal_now: DataTypes.BIGINT,
+    nominal_paid: DataTypes.BIGINT,
     owner_id: DataTypes.INTEGER,
-    nominal: DataTypes.INTEGER,
-    amount_paid: DataTypes.INTEGER,
     status: DataTypes.INTEGER
   }, {});
   Project.associate = function(models) {
