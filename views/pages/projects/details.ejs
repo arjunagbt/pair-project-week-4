@@ -11,15 +11,28 @@
 </head>
 
 <body>
-    <h1><%=data.name%></h1>
-    <h3>Started by: <%=data.User.full_name%></h3>
-    <h3>Funding Status: Rp<%=data.nominal_now%>/Rp<%=data.nominal_needed%></h3>
-    <h5>Description:<br><%=data.description%></h5>
-    <h3>Fund This Project!</h3>
-    <form action="/" method="post">
-        <input type="number" name="fund">
-        <input type="submit" value="Fund!">
-    </form>
+    <h1>
+        <%=data.name%>
+    </h1>
+    <h3>Started by:
+        <%=data.User.full_name%>
+    </h3>
+    <h3>Funding Status: Rp
+        <%=data.nominal_now%>/Rp
+            <%=data.nominal_needed%>
+    </h3>
+    <h5>Description:<br><%=data.description%>
+    </h5>
+
+    <%if(session && session.id == data.User.id){%>
+        <a href="/projects/edit/<%=data.id%>">edit</a>
+        <%}%>
+
+            <h3>Fund This Project!</h3>
+            <form action="/" method="post">
+                <input type="number" name="fund">
+                <input type="submit" value="Fund!">
+            </form>
 </body>
 
 </html>
