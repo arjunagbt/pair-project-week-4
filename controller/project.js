@@ -48,35 +48,99 @@ class ProjectController {
                 .then(data => {
                     res.redirect(`/projects/details/${data.id}`)
                 })
-                .catch(err=>{
+                .catch(err => {
                     res.send(err)
                 })
         } else {
-            res.send('Must Login First to Add Project')
+            res.redirect('/user/login')
         }
     }
     static editProjectGet(req, res) {
-        Model.Project.findOne({where:{id:req.params.id}})
-        .then(data =>{
-            res.render('pages/projects/editproject', {data:data})
-        })
-        .catch(err=>{
-            res.send(err)
-        })
+        Model.Project.findOne({ where: { id: req.params.id } })
+            .then(data => {
+                res.render('pages/projects/editproject', { data: data })
+            })
+            .catch(err => {
+                res.send(err)
+            })
     }
     static editProjectPost(req, res) {
-        Model.Project.findOne({where:{id:req.params.id}})
-        .then(data =>{
-            data.name = req.body.name
-            data.description = req.body.description
-            return data.save()
+        Model.Project.findOne({ where: { id: req.params.id } })
+            .then(data => {
+                data.name = req.body.name
+                data.description = req.body.description
+                return data.save()
+            })
+            .then(() => {
+                res.redirect(`/projects/details/${req.params.id}`)
+            })
+            .catch(err => {
+                res.send(err)
+            })
+    }
+    static fundProject(req, res) {
+        if (req.session.user.balance >= req.body.fund) {
+            Model.ProjectUser.create({
+                funder_id: req.params.idUser,
+                project_id: req.params.idProject,
+                nominal: req.body.fund
+            })
+                .then(data => {
+                    return Model.Project.findOne({
+                        where: {
+                            id: data.project_id
+                        }
+                    })
+                })
+                .then(data => {
+                    data.nominal_now += req.body.fund
+                    return data.save()
+                })
+                .then(() => {
+                    return Model.User.findOne({
+                        where: {
+                            id: req.params.idUser
+                        }
+                    })
+                })
+                .then(data => {
+                    data.balance = Number(data.balance) - req.body.fund
+                    req.session.user.balance = Number(req.session.user.balance) - req.body.fund
+                    return data.save()
+                })
+                .then(() => {
+                    res.redirect(`/projects/details/${req.params.idProject}`)
+                })
+                .catch(err => {
+                    res.send(err)
+                })
+        } else {
+            res.send('not enough cash!')
+        }
+    }
+    static deleteProject(req, res) {
+        Model.Project.findOne({
+            where: {
+                id: req.params.id
+            }
         })
-        .then(()=>{
-            res.redirect(`/projects/details/${req.params.id}`)
-        })
-        .catch(err=>{
-            res.send(err)
-        })
+            .then(data => {
+                if (data.nominal_now>0 && data.nominal_now < data.nominal_needed) {
+                    res.send(`You can't delete an ongoing project!`)
+                } else {
+                    return Model.Project.destroy({
+                        where: {
+                            id: req.params.id
+                        }
+                    })
+                }
+            })
+            .then(() => {
+                res.redirect('/projects')
+            })
+            .catch((err) => {
+                res.send(err)
+            })
     }
 }
 

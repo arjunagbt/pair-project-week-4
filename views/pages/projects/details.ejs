@@ -25,14 +25,20 @@
     </h5>
 
     <%if(session && session.id == data.User.id){%>
-        <a href="/projects/edit/<%=data.id%>">edit</a>
+        <a href="/projects/edit/<%=data.id%>">edit</a>|<a href="/projects/delete/<%=data.id%>">delete</a>
         <%}%>
 
             <h3>Fund This Project!</h3>
-            <form action="/" method="post">
-                <input type="number" name="fund">
-                <input type="submit" value="Fund!">
-            </form>
+            <%if(session){%>
+                <form action="/projects/fund/<%=data.id%>/<%=session.id%>" method="post">
+                    <input type="number" name="fund">
+                    <input type="submit" value="Fund!">
+                </form>
+                <%}else{%>
+                    <a href="/user/login">Log In</a>
+                    <%}%>
+
+
 </body>
 
 </html>
