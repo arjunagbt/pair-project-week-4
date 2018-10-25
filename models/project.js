@@ -7,11 +7,15 @@ module.exports = (sequelize, DataTypes) => {
     nominal_now: DataTypes.BIGINT,
     nominal_paid: DataTypes.BIGINT,
     owner_id: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    status: DataTypes.INTEGER,
+    static: DataTypes.STRING
   }, {});
   Project.associate = function(models) {
     Project.belongsTo(models.User, { foreignKey: 'owner_id', targetKey: 'id'})
     Project.belongsToMany(models.User, { through: models.ProjectUser, foreignKey: 'project_id', otherKey: 'funder_id' })
   };
+  Project.prototype.getPercent = function(){
+    return `${((this.nominal_now/this.nominal_needed) * 100).toFixed(2)}% funded`
+  }
   return Project;
 };

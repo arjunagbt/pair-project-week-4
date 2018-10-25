@@ -1,0 +1,24 @@
+body{
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center
+}
+
+td, th{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: rgb(56, 63, 78);
+    color: white;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+a{
+    text-decoration: none;
+    color: blue;
+}
