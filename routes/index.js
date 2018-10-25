@@ -1,10 +1,8 @@
 const router = require('express').Router()
 const user = require('./user')
-const projects = require ('./project')
+const projects = require('./project')
 
-router.get('/', (req,res) =>{
-    res.send('ini homepage')
-})
+router.get('/', (req, res) => { res.render('pages/home') })
 router.use('/user', user)
 router.use('/projects', projects)
 
