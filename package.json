@@ -1,0 +1,27 @@
+{
+  "name": "pair-project-week-4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjunagbt/pair-project-week-4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arjunagbt/pair-project-week-4/issues"
+  },
+  "homepage": "https://github.com/arjunagbt/pair-project-week-4#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "pg": "^7.5.0",
+    "sequelize": "^4.41.0"
+  }
+}
