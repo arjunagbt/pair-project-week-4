@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     salt: DataTypes.TEXT,
     full_name: DataTypes.STRING,
-    balance: DataTypes.INTEGER
+    balance: DataTypes.BIGINT
   }, {});
   User.associate = function (models) {
     User.belongsToMany(models.Project, { through: models.ProjectUser, foreignKey: 'funder_id', otherKey: 'project_id' })
