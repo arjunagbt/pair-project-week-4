@@ -13,7 +13,7 @@ class ProjectController {
                 //res.send(data)
             })
             .catch(err => {
-                res.send(err)
+                res.render('error', {error: err})
             })
     }
     static projectDetails(req, res) {
@@ -24,6 +24,7 @@ class ProjectController {
             include: Model.User
         })
             .then(data => {
+                if (!data) throw new Error(`No project with id ${req.params.id}`)
                 res.render('pages/projects/details', {
                     data: data,
                     session: req.session.user
@@ -31,7 +32,7 @@ class ProjectController {
                 //res.send(data)
             })
             .catch(err => {
-                res.send(err)
+                res.render('error', {error: err})
             })
     }
     static addProjectGet(req, res) {
@@ -51,7 +52,7 @@ class ProjectController {
                     res.redirect(`/projects/details/${data.id}`)
                 })
                 .catch(err => {
-                    res.send(err)
+                    res.render('error', {error: err})
                 })
         } else {
             res.redirect('/user/login')
@@ -63,7 +64,7 @@ class ProjectController {
                 res.render('pages/projects/editproject', { data: data })
             })
             .catch(err => {
-                res.send(err)
+                res.render('error', {error: err})
             })
     }
     static editProjectPost(req, res) {
@@ -77,7 +78,7 @@ class ProjectController {
                 res.redirect(`/projects/details/${req.params.id}`)
             })
             .catch(err => {
-                res.send(err)
+                res.render('error', {error: err})
             })
     }
     static fundProject(req, res) {
@@ -114,7 +115,7 @@ class ProjectController {
                     res.redirect(`/projects/details/${req.params.idProject}`)
                 })
                 .catch(err => {
-                    res.send(err)
+                    res.render('error', {error: err})
                 })
         } else {
             res.send('not enough cash!')
@@ -141,7 +142,7 @@ class ProjectController {
                 res.redirect('/projects')
             })
             .catch((err) => {
-                res.send(err)
+                res.render('error', {error: err})
             })
     }
 }
