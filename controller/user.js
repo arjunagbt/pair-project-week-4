@@ -3,22 +3,19 @@ const Model = require('../models')
 
 class UserController {
   static dashboard(req, res) {
-    if (!req.session.user) res.redirect('/user/login')
-    else {
-      let fundedProjects = Model.ProjectUser.findAll({
-        include: Model.Project,
-        where: { funder_id: req.session.user.id }
+    let fundedProjects = Model.ProjectUser.findAll({
+      include: Model.Project,
+      where: { funder_id: req.session.user.id }
+    })
+    let ownedProjects = Model.Project.findAll({
+      where: { owner_id: req.session.user.id }
+    })
+    Promise.all([fundedProjects, ownedProjects])
+      .then(([fundedProjects, ownedProjects]) => {
+        // res.send([fundedProjects, ownedProjects])
+        res.render('pages/user/index', { user: req.session.user, fundedProjects, ownedProjects })
       })
-      let ownedProjects = Model.Project.findAll({
-        where: { owner_id: req.session.user.id }
-      })
-      Promise.all([fundedProjects, ownedProjects])
-        .then(([fundedProjects, ownedProjects]) => {
-          // res.send([fundedProjects, ownedProjects])
-          res.render('pages/user/index', { user: req.session.user, fundedProjects, ownedProjects })
-        })
-        .catch(err => res.send(err))
-    }
+      .catch(err => res.render(error, { error: err }))
   }
 
   static signUpForm(req, res) {
@@ -39,7 +36,7 @@ class UserController {
       .then(user => {
         res.redirect('/user')
       })
-      .catch(err => res.send(err))
+      .catch(err => res.render(error, { error: err }))
   }
 
   static loginForm(req, res) {
@@ -50,14 +47,14 @@ class UserController {
     // res.send(req.body)
     Model.User.findOne({ where: { email: req.body.email } })
       .then(user => {
-        if (user.password === crypto.createHmac('sha256', user.salt).update(req.body.password).digest('hex')) {
+        if (user && user.password === crypto.createHmac('sha256', user.salt).update(req.body.password).digest('hex')) {
           req.session.user = { id: user.id, email: user.email, full_name: user.full_name, balance: user.balance }
           res.redirect('/user')
         } else {
-          res.send('password salah')
+          throw new Error('Username or password wrong')
         }
       })
-      .catch(err => res.send(err))
+      .catch(err => res.render('error', { error: err }))
   }
 
   static logout(req, res) {
@@ -66,33 +63,27 @@ class UserController {
   }
 
   static addBalanceForm(req, res) {
-    if (!req.session.user) res.redirect('/user/login')
-    else {
-      res.render('pages/user/add-balance', { user: req.session.user })
-    }
+    // if (!req.session.user) res.redirect('/user/login')
+    // else {
+    res.render('pages/user/add-balance', { user: req.session.user })
+    // }
   }
 
   static addBalance(req, res) {
-    if (!req.session.user) res.redirect('/user/login')
-    else {
-      Model.User.findById(req.session.user.id)
-        .then(user => {
-          user.balance = Number(user.balance) + Number(req.body.balance)
-          req.session.user.balance = user.balance
-          return user.save()
-        })
-        .then(user => {
-          res.redirect('/user')
-        })
-        .catch(err => res.send(err))
-    }
+    Model.User.findById(req.session.user.id)
+      .then(user => {
+        user.balance = Number(user.balance) + Number(req.body.balance)
+        req.session.user.balance = user.balance
+        return user.save()
+      })
+      .then(user => {
+        res.redirect('/user')
+      })
+      .catch(err => res.render(error, { error: err }))
   }
 
   static withdrawBalanceForm(req, res) {
-    if (!req.session.user) res.redirect('/user/login')
-    else {
-      res.render('pages/user/withdraw-balance', { user: req.session.user })
-    }
+    res.render('pages/user/withdraw-balance', { user: req.session.user })
   }
 
   static withdrawBalance(req, res) {
@@ -111,7 +102,7 @@ class UserController {
         .then(user => {
           res.redirect('/user')
         })
-        .catch(err => res.send(err))
+        .catch(err => res.render(error, { error: err }))
     }
   }
 }
