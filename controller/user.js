@@ -4,7 +4,21 @@ const Model = require('../models')
 class UserController {
   static dashboard(req, res) {
     if (!req.session.user) res.redirect('/user/login')
-    else res.render('pages/user/index', { user: req.session.user })
+    else {
+      let fundedProjects = Model.ProjectUser.findAll({
+        include: Model.Project,
+        where: { funder_id: req.session.user.id }
+      })
+      let ownedProjects = Model.Project.findAll({
+        where: { owner_id: req.session.user.id }
+      })
+      Promise.all([fundedProjects, ownedProjects])
+        .then(([fundedProjects, ownedProjects]) => {
+          // res.send([fundedProjects, ownedProjects])
+          res.render('pages/user/index', { user: req.session.user, fundedProjects, ownedProjects })
+        })
+        .catch(err => res.send(err))
+    }
   }
 
   static signUpForm(req, res) {
@@ -77,14 +91,27 @@ class UserController {
   static withdrawBalanceForm(req, res) {
     if (!req.session.user) res.redirect('/user/login')
     else {
-      res.render('pages/user/add-balance', { user: req.session.user })
+      res.render('pages/user/withdraw-balance', { user: req.session.user })
     }
   }
 
   static withdrawBalance(req, res) {
     if (!req.session.user) res.redirect('/user/login')
     else {
-      res.redirect('/user')
+      Model.User.findById(req.session.user.id)
+        .then(user => {
+          if (Number(user.balance) < Number(req.body.balance)) {
+            throw new Error(`You don't have enough in your account`)
+          } else {
+            user.balance = Number(user.balance) - Number(req.body.balance)
+            req.session.user.balance = user.balance
+            return user.save()
+          }
+        })
+        .then(user => {
+          res.redirect('/user')
+        })
+        .catch(err => res.send(err))
     }
   }
 }
