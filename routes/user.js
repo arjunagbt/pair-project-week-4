@@ -12,6 +12,9 @@ router.post('/login', Controller.user.login)
 
 router.post('/logout', Controller.user.logout)
 
+router.get('/change-password', isLogin, Controller.user.changePasswordForm)
+router.post('/change-password', isLogin, Controller.user.changePassword)
+
 router.get('/add-balance', isLogin, Controller.user.addBalanceForm)
 router.post('/add-balance', isLogin, Controller.user.addBalance)
 
