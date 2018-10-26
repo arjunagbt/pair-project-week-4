@@ -1,4 +1,5 @@
 const Model = require('../models')
+const showImage = require('../helpers/showimage')
 
 class ProjectController {
     static showProjects(req, res) {
@@ -17,6 +18,7 @@ class ProjectController {
             })
     }
     static projectDetails(req, res) {
+        res.locals.showImage = showImage
         Model.Project.findOne({
             where: {
                 id: req.params.id
@@ -41,12 +43,16 @@ class ProjectController {
     static addProjectPost(req, res) {
         if (req.session.user) {
             //res.send(req.file)
+            let statics = []
+            req.files.forEach(element => {
+                statics.push(element.originalname)
+            });
             Model.Project.create({
                 name: req.body.name,
                 description: req.body.description,
                 nominal_needed: req.body.nominal,
                 owner_id: req.session.user.id,
-                static: req.file.originalname
+                static: statics.join('-')
             })
                 .then(data => {
                     res.redirect(`/projects/details/${data.id}`)
