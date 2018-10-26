@@ -14,7 +14,10 @@
     <h1>
         <%=data.name%>
     </h1>
-    <img src="<%=`/${data.static}`%>" alt="project image">
+    <%let arrImage = showImage(data.static)%>
+    <%arrImage.forEach((element,index)=>{%>
+        <img style="max-width:200px;max-height:200px;" src="<%=`/${element}`%>" alt="project image <%=index%>">
+    <%})%>
     <h3>Started by:
         <%=data.User.full_name%>
     </h3>
