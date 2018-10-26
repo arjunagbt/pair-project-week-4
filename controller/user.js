@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const Model = require('../models')
+const checkRawPassword = require('../helpers/checkRawPassword')
 
 class UserController {
   static dashboard(req, res) {
@@ -25,18 +26,22 @@ class UserController {
 
   static signUp(req, res) {
     // res.send(req.body)
-    let salt = crypto.randomBytes(256).toString('hex')
-    let passwordHash = crypto.createHmac('sha256', salt).update(req.body.password).digest('hex')
-    Model.User.create({
-      full_name: req.body.full_name,
-      email: req.body.email,
-      salt: salt,
-      password: passwordHash
-    })
-      .then(user => {
-        res.redirect('/user')
+    let passwordErr = checkRawPassword(req.body.password)
+    if (passwordErr) res.render('error', { error: passwordErr })
+    else {
+      let salt = crypto.randomBytes(256).toString('hex')
+      let passwordHash = crypto.createHmac('sha256', salt).update(req.body.password).digest('hex')
+      Model.User.create({
+        full_name: req.body.full_name,
+        email: req.body.email,
+        salt: salt,
+        password: passwordHash
       })
-      .catch(err => res.render(error, { error: err }))
+        .then(user => {
+          res.redirect('/user')
+        })
+        .catch(err => res.render('error', { error: err }))
+    }
   }
 
   static loginForm(req, res) {
@@ -62,11 +67,32 @@ class UserController {
     res.redirect('/user/login')
   }
 
+  static changePasswordForm(req, res) {
+    res.render('pages/user/change-password')
+  }
+
+  static changePassword(req, res) {
+    let passwordErr = checkRawPassword(req.body.new_password)
+    if (passwordErr) res.render('error', { error: passwordErr })
+    else {
+      Model.User.findById(req.session.user.id)
+      .then(user => {
+        if (user.password !== crypto.createHmac('sha256', user.salt).update(req.body.current_password).digest('hex')) {
+          throw new Error('Password does not match')
+        } else {
+          user.password = crypto.createHmac('sha256', user.salt).update(req.body.new_password).digest('hex')
+          return user.save()
+        }
+      })
+      .then(user => {
+        res.redirect('/user')
+      })
+      .catch(err => res.render(error, { error: err }))
+    }
+  }
+
   static addBalanceForm(req, res) {
-    // if (!req.session.user) res.redirect('/user/login')
-    // else {
     res.render('pages/user/add-balance', { user: req.session.user })
-    // }
   }
 
   static addBalance(req, res) {
